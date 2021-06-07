@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Weather";
+    if (ViewBag.Rain == true)
+    {
+    <script>alert("It is raining today");</script>
+    }
+}
+@model WeatherApp.Models.WeatherViewModel
+
+<div class="text-center">
+
+    <form asp-controller="home" asp-action="getweather" method="post">
+        <div class="form-group">
+            <div class="leftcontent">
+                <div class="cityinput">
+                    <label>Enter your city</label>
+                    <input id ="totheleft" asp-for="CityName" class="form-control" />
+                    <span asp-validation-for="CityName" class="text-danger"></span>
+                </div>
+                <input type="submit" value="Go" class="btn btn-primary" />
+            </div>
+
+        </div>
+    </form>
+
+    <h2 class="leftcontent">Forecast for @Model.CityName</h2>
+    <table>
+        <tr>
+            <td>Weather</td>
+            <td>@Model.Description</td>
+        </tr>
+        <tr>
+            <td>Min temperature</td>
+            <td>@Model.TempMin</td>
+        </tr>
+        <tr>
+            <td>Max temperature</td>
+            <td>@Model.TempMax</td>
+        </tr>
+    </table>
+
+
+</div>

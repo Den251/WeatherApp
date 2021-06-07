@@ -18,10 +18,14 @@ namespace WeatherApp.Controllers
         private static Dictionary<string, DateTime> alertCitiesList = new Dictionary<string, DateTime>();
         private static bool rain = false;
         private static bool alert = false;
+        private const string cookieKey = "lastCity";
+
+        //Method to get info by city
         private static WeatherViewModel MakeRequest(string city)
         {
+            string apikey= "3b977a54a06908e31fc9ff4906d8e27b";
             string content;
-            string url = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + "3b977a54a06908e31fc9ff4906d8e27b&units=metric";
+            string url = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apikey +"&units=metric";
             WeatherViewModel weatherForecast = new WeatherViewModel();
             WebRequest request = WebRequest.Create(url);
             WebResponse response = request.GetResponse();
@@ -48,8 +52,10 @@ namespace WeatherApp.Controllers
                     Description = weatherResponse.weather[0].main
                 };
             }
+
+            //Here, we decide should rain alert be displayed or not
             rain = false;
-            if (weatherForecast.Description == "Clouds" && !alertCitiesList.ContainsKey(city))
+            if (weatherForecast.Description == "Rain" && !alertCitiesList.ContainsKey(city))
             {
                 alertCitiesList.Add(city, DateTime.Now.AddDays(1));
                 alert = true;
@@ -63,12 +69,13 @@ namespace WeatherApp.Controllers
             
         }
 
-        private const string cookieKey = "lastCity";
+        
         public IActionResult Index()
         {
             return View();
         }
 
+        //Getting initial weather info using city from cookies
         public IActionResult GetWeather()
         {
             
@@ -87,6 +94,7 @@ namespace WeatherApp.Controllers
             return View(weatherForecast);
         }
 
+        //Getting weather info and saving last city to cookies
         [HttpPost]
         public IActionResult GetWeather(string cityName)
         {
@@ -114,7 +122,7 @@ namespace WeatherApp.Controllers
                 }
                 catch
                 {
-                    ModelState.AddModelError(nameof(WeatherViewModel.CityName), "The city you have entered doesn't exist");
+                    ModelState.AddModelError(nameof(WeatherViewModel.CityName), "The city you have entered doesn't exist or api call has been colapsed");
                 }
                 
             }

@@ -19,6 +19,7 @@ namespace WeatherApp.Controllers
         private static bool rain = false;
         private static bool alert = false;
         private const string cookieKey = "lastCity";
+        ///WeatherViewModel weatherForecast1 = new WeatherViewModel();
 
         //Method to get info by city
         private static WeatherViewModel MakeRequest(string city)
@@ -43,7 +44,7 @@ namespace WeatherApp.Controllers
 
 
 
-                dynamic locationData = JsonConvert.DeserializeObject<dynamic>(content);
+                
                 weatherForecast = new WeatherViewModel()
                 {
                     CityName = weatherResponse.name,
@@ -60,7 +61,8 @@ namespace WeatherApp.Controllers
                 alertCitiesList.Add(city, DateTime.Now.AddDays(1));
                 alert = true;
             }
-            if (alertCitiesList[city] > DateTime.Now && alert== true)
+            
+            if (alertCitiesList.ContainsKey(city)&& alertCitiesList[city] > DateTime.Now && alert== true)
             {
                 rain = true;
                 alert = false;
@@ -84,7 +86,7 @@ namespace WeatherApp.Controllers
             try
             {
                 weatherForecast = MakeRequest(lastCity);
-
+                Console.WriteLine();
             }
             catch
             {
